@@ -1,0 +1,63 @@
+%YAML 1.2
+---
+name: GFA-BASIC
+file_extensions:
+  - lst
+scope: source.gfabasic
+contexts:
+  main:
+    # Strings begin and end with quotes, and use backslashes as an escape
+    # character
+    - match: '"'
+      scope: punctuation.definition.string.begin.gfabasic
+      push: double_quoted_string
+
+    # Comments begin with a '//' and finish at the end of the line
+    - match: "'"
+      scope: punctuation.definition.comment.gfabasic
+      push: line_comment
+
+    # Comments begin with a '//' and finish at the end of the line
+    - match: "!"
+      scope: punctuation.definition.comment.gfabasic
+      push: line_comment
+
+    # Keywords are if, else for and while.
+    # Note that blackslashes don't need to be escaped within single quoted
+    # strings in YAML. When using single quoted strings, only single quotes
+    # need to be escaped: this is done by using two single quotes next to each
+    # other.
+    - match: '~([a-zA-Z]+)\b'
+      scope: keyword.control.gfabasic
+
+    - match: '@([a-zA-Z]+)\b'
+      scope: keyword.control.gfabasic
+
+    - match: '&H[A-F0-9]+'
+      scope: constant.numeric.gfabasic
+
+    - match: '\$F\%|\$P<'
+      scope: keyword.control.gfabasic
+
+    - match: '\b(DATA|RESERVE|CHR|GET|PUT|CLR|MID|ERROR|BREAK|BMOVE|LOCAL|BYTE|DIM|DEFFN|SETWPEN|SETSPEN|OPENS|OPENW|CLEARW|SCREEN|WINDOW|DISPLAY|OFF|ON|NOT|EXIST|ADD|READ|EXIT|INPUT|OPEN|CLOSE|STRING|LEFT|RIGHT|RASTPORT|SCROLL|FONTS|INKEY|COLOR|BOX|DEC|INC|UPPER|OR|AND|VARPTR|STICK|STRIG|CLOSEW|CLOSES|SETCOLOR|EDIT|PBOX|LINE|RAND|PLOT|INT|STR|FN|WORD|PCIRCLE|SUB|MUL|ERASE|LEN|CARD)\b'
+      scope: keyword.control.gfabasic
+
+    - match: '\b(IF|ELSE|ENDIF|FOR|TO|STEP|NEXT|DO|LOOP|REPEAT|UNTIL|SELECT|CASE|ENDSELECT|ON|GOSUB|GOTO|PROCEDURE|RETURN|WHILE|WEND|FUNCTION|ENDFUNC)\b'
+      scope: keyword.control.gfabasic
+
+    # Numbers
+    - match: '\b(-)?[0-9.]+\b'
+      scope: constant.numeric.gfabasic
+
+  double_quoted_string:
+    - meta_scope: string.quoted.double.gfabasic
+    - match: '\\.'
+      scope: constant.character.escape.gfabasic
+    - match: '"'
+      scope: punctuation.definition.string.end.gfabasic
+      pop: true
+
+  line_comment:
+    - meta_scope: comment.line.gfabasic
+    - match: $
+      pop: true
